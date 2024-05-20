@@ -71,4 +71,43 @@ const getAsignaturasGrupos = async () => {
   
 };
 
-module.exports = { getDocentes, getDocentesAsignaturas, getAsignaturasGrupos };
+const getAlumnosCalificaciones = async()=>{
+    try{
+        await sql.connect(config);
+        const resultado = await sql.query(`
+            SELECT a.idAlumno,
+                p.nombre,
+                p.aPaterno,
+                p.aMaterno,
+                a.idAsignatura,
+                m.nomAsignatura,
+                a.calificacion 
+            FROM CA_SIA_CALIFICACIONES a
+            INNER JOIN CA_SIA_ASIGNATURA m ON a.idAsignatura = m.idAsignatura
+            INNER JOIN FD_SIA_ALUMNO al ON a.idAlumno = al.idAlumno
+            INNER JOIN DP_SIA_PERSONA p ON al.idPersona = p.idPersona`);
+        return resultado.recordset;
+    } catch(error){
+        console.error("Error al obtener los datos",error.message);
+    } finally{
+        sql.close();
+    }
+};
+
+//Agrega calificacion a un alumno
+const addCalificacion = async (idAlumno, idAsignatura, calificacion) => {
+    try {
+      await sql.connect(config);
+      const result = await sql.query(`
+        INSERT INTO dbo.CA_SIA_CALIFICACIONES (idAlumno, idAsignatura, calificacion)
+        VALUES ('${idAlumno}', '${idAsignatura}', ${calificacion})
+      `);
+      return result.rowsAffected[0]; 
+    } catch (err) {
+      console.error('Error al insertar la calificación', err.message);
+    } finally {
+      sql.close();
+    }
+  };
+
+module.exports = { getDocentes, getDocentesAsignaturas, getAsignaturasGrupos, getAlumnosCalificaciones, addCalificacion };
