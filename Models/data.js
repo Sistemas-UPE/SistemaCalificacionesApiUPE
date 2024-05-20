@@ -29,11 +29,11 @@ const getDocentesAsignaturas = async () => {
       SELECT 
         d.idDocente, 
         d.idPersona,
-        per.nombre,
-        per.aPaterno,
-        per.aMaterno,
+        per.nombre as Docente,
+        per.aPaterno as ApellidoPaternoDocente,
+        per.aMaterno as ApellidoMaternoDocente,
         a.idAsignatura,
-        a.nomAsignatura
+        a.nomAsignatura as NombreAsignaturas
       FROM  
         dbo.FD_SIA_DOCENTE d
       INNER JOIN dbo.DP_SIA_PERSONA per ON d.idPersona = per.idPersona
@@ -55,9 +55,9 @@ const getAsignaturasGrupos = async () => {
         const resultado = await sql.query(`
             SELECT
                 a.idAsignatura,
-                a.nomAsignatura,
+                a.nomAsignatura as NombreAsignatura,
                 g.idGrupo,
-                g.numAlumnos,
+                g.numAlumnos as NumeroTotalAlumnos,
                 g.periodo
             FROM CA_SIA_ASIGNATURA a 
             INNER JOIN dbo.CA_SIA_ASIGNATURA_GRUPO ag ON a.idAsignatura = ag.idAsignatura
