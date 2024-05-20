@@ -30,8 +30,8 @@ const getDocentesAsignaturas = async () => {
         d.idDocente, 
         d.idPersona,
         per.nombre as Docente,
-        per.aPaterno as ApellidoPaternoDocente,
-        per.aMaterno as ApellidoMaternoDocente,
+        per.aPaterno as ApellidoPaterno,
+        per.aMaterno as APellidoMaterno,
         a.idAsignatura,
         a.nomAsignatura as NombreAsignaturas
       FROM  
