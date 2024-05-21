@@ -25,22 +25,7 @@ const getDocentes = async () => {
 const getDocentesAsignaturas = async () => {
   try {
     await sql.connect(config);
-    const result = await sql.query(`
-      SELECT 
-        d.idDocente, 
-        d.idPersona,
-        per.nombre as Docente,
-        per.aPaterno as ApellidoPaterno,
-        per.aMaterno as APellidoMaterno,
-        a.idAsignatura,
-        a.nomAsignatura as NombreAsignaturas
-      FROM  
-        dbo.FD_SIA_DOCENTE d
-      INNER JOIN dbo.DP_SIA_PERSONA per ON d.idPersona = per.idPersona
-      INNER JOIN
-        dbo.CA_SIA_ASIGNATURA_DOCENTE ad ON d.idDocente = ad.idDocente
-      INNER JOIN
-        dbo.CA_SIA_ASIGNATURA a ON ad.idAsignatura = a.idAsignatura`);
+    const result = await sql.query(`EXEC dbo.spDocentesAsignaturas;;`);
     return result.recordset;
   } catch (err) {
     console.error("Error al consultar la base de datos", err.message);
@@ -53,15 +38,7 @@ const getAsignaturasGrupos = async () => {
     try{
         await sql.connect(config);
         const resultado = await sql.query(`
-            SELECT
-                a.idAsignatura,
-                a.nomAsignatura as NombreAsignatura,
-                g.idGrupo,
-                g.numAlumnos as NumeroTotalAlumnos,
-                g.periodo
-            FROM CA_SIA_ASIGNATURA a 
-            INNER JOIN dbo.CA_SIA_ASIGNATURA_GRUPO ag ON a.idAsignatura = ag.idAsignatura
-            INNER JOIN dbo.CT_SIA_GRUPO g ON ag.idGrupo = g.idGrupo`);
+        EXEC dbo.spAsignaturasGrupos;`);
         return resultado.recordset;
     } catch(error){
         console.error("Error al obtener los datos",error.message);
@@ -75,17 +52,7 @@ const getAlumnosCalificaciones = async()=>{
     try{
         await sql.connect(config);
         const resultado = await sql.query(`
-            SELECT a.idAlumno,
-                p.nombre,
-                p.aPaterno,
-                p.aMaterno,
-                a.idAsignatura,
-                m.nomAsignatura,
-                a.calificacion 
-            FROM CA_SIA_CALIFICACIONES a
-            INNER JOIN CA_SIA_ASIGNATURA m ON a.idAsignatura = m.idAsignatura
-            INNER JOIN FD_SIA_ALUMNO al ON a.idAlumno = al.idAlumno
-            INNER JOIN DP_SIA_PERSONA p ON al.idPersona = p.idPersona`);
+        EXEC dbo.spAlumnosCalificaciones;`);
         return resultado.recordset;
     } catch(error){
         console.error("Error al obtener los datos",error.message);
