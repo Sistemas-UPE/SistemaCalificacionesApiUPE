@@ -25,7 +25,7 @@ const getDocentes = async () => {
 const getDocentesAsignaturas = async () => {
   try {
     await sql.connect(config);
-    const result = await sql.query(`EXEC dbo.spDocentesAsignaturas;;`);
+    const result = await sql.query(`EXEC dbo.spDocentesAsignaturas;`);
     return result.recordset;
   } catch (err) {
     console.error("Error al consultar la base de datos", err.message);
